@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public enum PresentUtil implements Supplier<ItemStack> {
-    RED_BOX("https://textures.minecraft.net/texture/5fde3bfce2d8cb724de8556e5ec21b7f15f584684ab785214add164be7624b", Material.RED_DYE);
+    RED_BOX("https://textures.minecraft.net/texture/6cef9aa14e884773eac134a4ee8972063f466de678363cf7b1a21a85b7", Material.RED_DYE);
 
     private static final Random random = new Random(System.currentTimeMillis());
     private final Material color;
