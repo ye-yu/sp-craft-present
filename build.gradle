@@ -1,0 +1,70 @@
+apply plugin: 'java'
+
+group = pluginGroup
+version = pluginVersion
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
+}
+
+
+import com.ibm.jvm.dtfjview.tools.utils.FileUtils
+import org.apache.tools.ant.filters.ReplaceTokens
+import org.apache.tools.ant.taskdefs.condition.Os
+
+import java.nio.file.Paths
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+task deletePlugin {
+    String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
+    logger.info("Spigot server directory: $dir")
+    def plugins = Paths.get(dir).resolve("plugins").toFile().listFiles() ?: new File[0]
+    logger.debug("Plugin list size: ${plugins.length}")
+    iterateAndDelete plugins
+}
+
+task deployPlugin(type: Copy) {
+    String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
+    String pluginDir = Paths.get(dir).resolve("plugins").toAbsolutePath().toString()
+    String artifactName = rootProject.name + "-" + version + ".jar"
+    def pluginPath = "$buildDir/libs/$artifactName"
+    from pluginPath
+    into pluginDir
+    doLast {
+        logger.info("Deployed $artifactName")
+    }
+}
+
+deployPlugin.dependsOn deletePlugin, build
+
+void iterateAndDelete(File[] plugins) {
+    plugins.each { File item ->
+        logger.debug("Inspecting ${item.getName()}")
+        if (item.name.startsWith(rootProject.name)) {
+            def name = item.name
+            item.delete()
+            logger.info("Removed $name")
+        }
+    }
+}
