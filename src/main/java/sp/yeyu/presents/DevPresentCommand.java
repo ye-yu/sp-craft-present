@@ -27,7 +27,7 @@ public class DevPresentCommand implements CommandExecutor {
             return false;
         }
         if (args.length > 1) sender.sendMessage(ChatColor.YELLOW + "Only one parameter is allowed." + ChatColor.RESET);
-        ((Player) sender).getInventory().addItem(PresentUtil.random().get());
+        ((Player) sender).getInventory().addItem(Presents.random().get());
         return true;
     }
 }

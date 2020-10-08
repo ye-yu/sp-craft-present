@@ -3,7 +3,7 @@ package sp.yeyu.presents;
 public enum Log {
     INSTANCE;
 
-    private static final int LOOK_BACK = 3;
+    private static final int LOOK_BACK = 4;
 
     public void info(String message) {
         final StackTraceElement[] currentStackTrace = Thread.currentThread().getStackTrace();

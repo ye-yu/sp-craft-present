@@ -21,10 +21,9 @@ public class CraftPresents extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
         Objects.requireNonNull(getCommand("devpresent")).setExecutor(new DevPresentCommand());
+        getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Log.INSTANCE.info("Plugin is activated.");
         NBTEditor.getEmptyNBTCompound();
         Log.INSTANCE.info("NBTEditor is loaded.");
-
-        for (PresentUtil present : PresentUtil.values()) present.craft(this);
     }
 }
