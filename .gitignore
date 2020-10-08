@@ -82,5 +82,6 @@ fabric.properties
 .idea/sonarlint
 
 target/
+build/
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij
