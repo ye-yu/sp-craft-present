@@ -24,5 +24,7 @@ public class CraftPresents extends JavaPlugin {
         Log.INSTANCE.info("Plugin is activated.");
         NBTEditor.getEmptyNBTCompound();
         Log.INSTANCE.info("NBTEditor is loaded.");
+
+        for (PresentUtil present : PresentUtil.values()) present.craft(this);
     }
 }
