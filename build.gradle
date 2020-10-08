@@ -1,4 +1,7 @@
-apply plugin: 'java'
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'java'
+}
 
 group = pluginGroup
 version = pluginVersion
@@ -16,15 +19,20 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    maven {
+        name = 'CodeMC'
+        url = 'https://repo.codemc.org/repository/maven-public'
+    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
+    implementation 'io.github.bananapuncher714:NBTEditor:7.16'
+    shadow group: 'io.github.bananapuncher714', name: 'NBTEditor', version: '7.16'
 }
 
 
-import com.ibm.jvm.dtfjview.tools.utils.FileUtils
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -47,7 +55,7 @@ task deletePlugin {
 task deployPlugin(type: Copy) {
     String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
     String pluginDir = Paths.get(dir).resolve("plugins").toAbsolutePath().toString()
-    String artifactName = rootProject.name + "-" + version + ".jar"
+    String artifactName = rootProject.name + "-" + version + "-all.jar"
     def pluginPath = "$buildDir/libs/$artifactName"
     from pluginPath
     into pluginDir
@@ -56,7 +64,7 @@ task deployPlugin(type: Copy) {
     }
 }
 
-deployPlugin.dependsOn deletePlugin, build
+deployPlugin.dependsOn deletePlugin, shadowJar
 
 void iterateAndDelete(File[] plugins) {
     plugins.each { File item ->

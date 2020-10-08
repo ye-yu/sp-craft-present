@@ -3,11 +3,11 @@ package sp.yeyu.presents;
 public enum Log {
     INSTANCE;
 
-    private static final int lookBack = 2;
+    private static final int LOOK_BACK = 3;
 
     public void info(String message) {
         final StackTraceElement[] currentStackTrace = Thread.currentThread().getStackTrace();
-        final int lookBack = Math.max(currentStackTrace.length - Log.lookBack, 0);
+        final int lookBack = Math.max(currentStackTrace.length - Log.LOOK_BACK, 0);
         CraftPresents.getInstance().getLogger().info("[CraftPresents:" + currentStackTrace[lookBack].getClassName() + "] " + message);
     }
 }

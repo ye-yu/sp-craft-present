@@ -1,5 +1,6 @@
 package sp.yeyu.presents;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -21,5 +22,7 @@ public class CraftPresents extends JavaPlugin {
         super.onEnable();
         Objects.requireNonNull(getCommand("devpresent")).setExecutor(new DevPresentCommand());
         Log.INSTANCE.info("Plugin is activated.");
+        NBTEditor.getEmptyNBTCompound();
+        Log.INSTANCE.info("NBTEditor is loaded.");
     }
 }
