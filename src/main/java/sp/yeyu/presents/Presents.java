@@ -42,7 +42,7 @@ public enum Presents implements Supplier<ItemStack> {
 
     private ItemMeta renamePresent(final ItemMeta itemMeta) {
         itemMeta.setDisplayName("Present");
-        itemMeta.setLore(Lists.newArrayList("Present Tag"));
+        itemMeta.setLore(Lists.newArrayList("Present Tag", "Empty"));
         return itemMeta;
     }
 
