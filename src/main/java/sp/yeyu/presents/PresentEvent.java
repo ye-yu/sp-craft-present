@@ -48,9 +48,11 @@ public enum PresentEvent implements Listener {
             for (ItemStack itemStack : Data.INSTANCE.getItemsFromBlock(block.getLocation())) {
                 event.getPlayer().getWorld().dropItem(block.getLocation(), itemStack);
             }
+            Data.INSTANCE.removeLoot(block.getLocation());
             event.getPlayer().getWorld().dropItem(block.getLocation(), getRandomPaper());
+            event.setDropItems(false);
         } catch (IOException e) {
-            Log.INSTANCE.errorWithDisable("Cannot get presents at " + block.getLocation() + " with reasons: ", e);
+            Log.INSTANCE.errorWithDisable("Cannot get presents at " + block.getLocation() + " with reasons: " + e.getMessage(), e);
         }
     }
 

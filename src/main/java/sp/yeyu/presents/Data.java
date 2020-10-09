@@ -48,7 +48,6 @@ public enum Data {
         if (!file.exists()) throw new FileSystemException("Cannot find data for present at: " + filename);
         try(final Scanner reader = new Scanner(file)) {
             return getItemsFromName(reader.nextLine());
-
         }
     }
 
@@ -88,5 +87,11 @@ public enum Data {
 
     private <T> String arrayToString(T[] arr) {
         return Arrays.stream(arr).map(Objects::toString).collect(Collectors.joining("\n"));
+    }
+
+    public void removeLoot(Location location) throws FileSystemException {
+        final String filename = toFileName(location);
+        final File file = new File(directory, filename);
+        if (file.exists() && !file.delete()) throw new FileSystemException("Cannot remove loot data for present at: " + filename);
     }
 }
