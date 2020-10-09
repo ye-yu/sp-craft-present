@@ -25,5 +25,6 @@ public class CraftPresents extends JavaPlugin {
         NBTEditor.getEmptyNBTCompound();
         Log.INSTANCE.info("NBTEditor is loaded.");
         Presents.craftPresent(this);
+        getServer().getPluginManager().registerEvents(PresentEvent.INSTANCE, this);
     }
 }

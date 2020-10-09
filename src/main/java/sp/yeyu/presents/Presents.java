@@ -1,5 +1,6 @@
 package sp.yeyu.presents;
 
+import com.google.common.collect.Lists;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,9 +11,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 public enum Presents implements Supplier<ItemStack> {
@@ -30,6 +29,11 @@ public enum Presents implements Supplier<ItemStack> {
         namespaceName = String.join("", name().toLowerCase(Locale.ENGLISH).split("_"));
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public static boolean isPresent(ItemStack item) {
+        return item.getItemMeta() != null && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Present Tag");
+    }
+
     public ItemStack get() {
         final ItemStack head = NBTEditor.getHead(texture);
         head.setItemMeta(renamePresent(Objects.requireNonNull(head.getItemMeta())));
@@ -38,6 +42,7 @@ public enum Presents implements Supplier<ItemStack> {
 
     private ItemMeta renamePresent(final ItemMeta itemMeta) {
         itemMeta.setDisplayName("Present");
+        itemMeta.setLore(Lists.newArrayList("Present Tag"));
         return itemMeta;
     }
 
