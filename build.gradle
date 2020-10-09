@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
     implementation 'io.github.bananapuncher714:NBTEditor:7.16'
     shadow group: 'io.github.bananapuncher714', name: 'NBTEditor', version: '7.16'

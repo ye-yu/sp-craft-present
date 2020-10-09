@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Supplier;
 
-public enum PresentItems implements Supplier<Material> {
+public enum PresentIngredients implements Supplier<Material> {
 
     WHITE(Material.WHITE_DYE),
     ORANGE(Material.ORANGE_DYE),
@@ -27,7 +27,7 @@ public enum PresentItems implements Supplier<Material> {
 
     private final Material dye;
 
-    PresentItems(Material dye) {
+    PresentIngredients(Material dye) {
         this.dye = dye;
     }
 

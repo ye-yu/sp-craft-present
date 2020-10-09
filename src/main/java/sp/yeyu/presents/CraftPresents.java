@@ -7,10 +7,10 @@ import java.util.Objects;
 
 public class CraftPresents extends JavaPlugin {
 
-    private static JavaPlugin instance;
+    private static JavaPlugin instance = null;
     public CraftPresents() {
         super();
-        instance = this;
+        if(instance == null) instance = this;
     }
 
     public static JavaPlugin getInstance() {
@@ -21,9 +21,9 @@ public class CraftPresents extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
         Objects.requireNonNull(getCommand("devpresent")).setExecutor(new DevPresentCommand());
-        getServer().getPluginManager().registerEvents(new CraftListener(), this);
         Log.INSTANCE.info("Plugin is activated.");
         NBTEditor.getEmptyNBTCompound();
         Log.INSTANCE.info("NBTEditor is loaded.");
+        Presents.craftPresent(this);
     }
 }
