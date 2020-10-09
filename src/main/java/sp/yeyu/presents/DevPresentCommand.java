@@ -22,12 +22,8 @@ public class DevPresentCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return false;
-        if(!sender.isOp()) {
-            sender.sendMessage(ChatColor.RED + "Only OPs can run this command. Check your permission.");
-            return false;
-        }
-        if (args.length > 1) sender.sendMessage(ChatColor.YELLOW + "Only one parameter is allowed." + ChatColor.RESET);
-        ((Player) sender).getInventory().addItem(Presents.random().get());
+        if (!sender.isOp()) sender.sendMessage(ChatColor.RED + "Only OPs can run this command. Check your permission.");
+        else ((Player) sender).getInventory().addItem(Presents.random().get());
         return true;
     }
 }

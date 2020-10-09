@@ -7,5 +7,5 @@ description: Craft presents to your friends!
 website: https://github.com/ye-yu/
 commands:
   devpresent:
-    description: To give a sample present
-    usage: /devpresent empty|random
+    description: To give an empty present
+    usage: /devpresent
