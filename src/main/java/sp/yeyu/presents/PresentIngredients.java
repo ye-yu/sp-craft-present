@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 public enum PresentIngredients implements Supplier<Material> {
 
+    RED(Material.RED_DYE),
+    GRAY(Material.GRAY_DYE),
     WHITE(Material.WHITE_DYE),
     ORANGE(Material.ORANGE_DYE),
     MAGENTA(Material.MAGENTA_DYE),
@@ -14,14 +16,12 @@ public enum PresentIngredients implements Supplier<Material> {
     YELLOW(Material.YELLOW_DYE),
     LIME(Material.LIME_DYE),
     PINK(Material.PINK_DYE),
-    GRAY(Material.GRAY_DYE),
     LIGHT_GRAY(Material.LIGHT_GRAY_DYE),
     CYAN(Material.CYAN_DYE),
     PURPLE(Material.PURPLE_DYE),
     BLUE(Material.BLUE_DYE),
     BROWN(Material.BROWN_DYE),
     GREEN(Material.GREEN_DYE),
-    RED(Material.RED_DYE),
     BLACK(Material.BLACK_DYE),
     PAPER(Material.PAPER);
 

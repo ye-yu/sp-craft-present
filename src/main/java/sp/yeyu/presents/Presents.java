@@ -6,22 +6,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public enum Presents implements Supplier<ItemStack> {
-    RED_BOX("https://textures.minecraft.net/texture/6cef9aa14e884773eac134a4ee8972063f466de678363cf7b1a21a85b7", PresentIngredients.RED.get());
+    RED_BOX("https://textures.minecraft.net/texture/6cef9aa14e884773eac134a4ee8972063f466de678363cf7b1a21a85b7", PresentIngredients.RED.get()),
+    GRAY_BOX("http://textures.minecraft.net/texture/ac3821d4f61b17f82f0d7a8e5312608ff50ede29b1b4dc89847be9427d36", PresentIngredients.GRAY.get());
+
 
     private static final Random random = new Random(System.currentTimeMillis());
     private final Material dyeColor;
     private final String texture;
     private final String namespaceName;
-    private Recipe recipe = null;
 
     Presents(String textureURL, Material dyeColor) {
         texture = textureURL;
@@ -30,8 +32,8 @@ public enum Presents implements Supplier<ItemStack> {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static boolean isPresent(ItemStack item) {
-        return item.getItemMeta() != null && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("Present Tag");
+    public static boolean isInvalidPresent(ItemStack item) {
+        return item.getItemMeta() == null || !item.getItemMeta().hasLore() || !item.getItemMeta().getLore().contains("Present Tag");
     }
 
     public ItemStack get() {
@@ -61,7 +63,7 @@ public enum Presents implements Supplier<ItemStack> {
         recipe.setIngredient('P', Material.PAPER);
         recipe.setIngredient('D', dyeColor);
         Bukkit.addRecipe(recipe);
-        this.recipe = Objects.requireNonNull(Bukkit.getRecipe(key));
+        Objects.requireNonNull(Bukkit.getRecipe(key));
     }
 
     public static void craftPresent(JavaPlugin plugin) {

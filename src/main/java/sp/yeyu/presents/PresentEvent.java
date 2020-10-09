@@ -33,7 +33,7 @@ public enum PresentEvent implements Listener {
         final Block block = event.getBlock();
         if (block.getType() != Material.PLAYER_HEAD) return;
         final ItemStack itemInHand = event.getItemInHand();
-        if (!Presents.isPresent(itemInHand)) return;
+        if (Presents.isInvalidPresent(itemInHand)) return;
         try {
             Data.INSTANCE.recordPresent(block, itemInHand);
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public enum PresentEvent implements Listener {
     public void onPresentRightClick(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR) return;
         final ItemStack itemInHand = event.getPlayer().getInventory().getItemInMainHand();
-        if (!Presents.isPresent(itemInHand)) return;
+        if (Presents.isInvalidPresent(itemInHand)) return;
         final Inventory present = Bukkit.createInventory(event.getPlayer(), 9, "Present");
         event.getPlayer().openInventory(present);
         // load present to inventory
@@ -83,7 +83,7 @@ public enum PresentEvent implements Listener {
         if (inventory != OPEN_INVENTORIES.getOrDefault(event.getPlayer(), null)) return;
         OPEN_INVENTORIES.remove(event.getPlayer());
         final ItemStack itemInHand = event.getPlayer().getInventory().getItemInMainHand();
-        if (!Presents.isPresent(itemInHand)) {
+        if (Presents.isInvalidPresent(itemInHand)) {
             returnItemsToPlayer(event, inventory);
             return;
         }
