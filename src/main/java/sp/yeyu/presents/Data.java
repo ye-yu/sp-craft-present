@@ -4,13 +4,13 @@ import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public enum Data {
     INSTANCE;
@@ -47,12 +47,12 @@ public enum Data {
         final File file = new File(directory, filename);
         if (!file.exists()) throw new FileSystemException("Cannot find data for present at: " + filename);
         try(final Scanner reader = new Scanner(file)) {
-            return getItemsFromBlock(reader.nextLine());
+            return getItemsFromName(reader.nextLine());
 
         }
     }
 
-    private ArrayList<ItemStack> getItemsFromBlock(String filename) throws FileNotFoundException {
+    public ArrayList<ItemStack> getItemsFromName(String filename) throws FileNotFoundException {
         final ArrayList<ItemStack> list = new ArrayList<>();
         if (filename.equals("Empty")) return list;
         try(final Scanner scanner = new Scanner(new File(directory, filename))) {
@@ -61,5 +61,32 @@ public enum Data {
             }
         }
         return list;
+    }
+
+    public void updatePresentsData(final ItemStack presentItem, final ItemStack[] contents) throws IOException {
+        final ItemMeta itemMeta = Objects.requireNonNull(presentItem.getItemMeta());
+        final List<String> lore = Objects.requireNonNull(itemMeta.getLore());
+        final String filename = lore.get(1).equals("Empty") ? UUID.randomUUID().toString() : lore.get(1);
+        final File file = new File(directory, filename);
+        if (file.exists() && !file.delete()) {
+            Log.INSTANCE.errorWithDisable("Cannot update present of: \n", new Throwable());
+            return;
+        }
+
+        try(final FileWriter writer = new FileWriter(file)) {
+            for (ItemStack content : contents) {
+                if (content == null) continue;
+                final NBTEditor.NBTCompound nbtCompound = NBTEditor.getNBTCompound(content);
+                writer.write(nbtCompound.toJson());
+                writer.write("\n");
+            }
+        }
+        lore.set(1, filename);
+        itemMeta.setLore(lore);
+        presentItem.setItemMeta(itemMeta);
+    }
+
+    private <T> String arrayToString(T[] arr) {
+        return Arrays.stream(arr).map(Objects::toString).collect(Collectors.joining("\n"));
     }
 }
