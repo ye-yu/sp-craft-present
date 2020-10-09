@@ -79,7 +79,7 @@ public enum Presents implements Supplier<ItemStack> {
     protected void craft(JavaPlugin plugin) {
         final NamespacedKey key = new NamespacedKey(plugin, namespaceName);
         final ShapedRecipe recipe = new ShapedRecipe(key, get());
-        recipe.shape(" P ", "PDP", " P ");
+        recipe.shape("PPP", "PDP", "PPP");
         recipe.setIngredient('P', Material.PAPER);
         recipe.setIngredient('D', dyeColor);
         Bukkit.addRecipe(recipe);
