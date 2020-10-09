@@ -1,7 +1,6 @@
 package sp.yeyu.presents;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Supplier;
 
@@ -9,20 +8,24 @@ public enum PresentIngredients implements Supplier<Material> {
 
     RED(Material.RED_DYE),
     GRAY(Material.GRAY_DYE),
-    WHITE(Material.WHITE_DYE),
-    ORANGE(Material.ORANGE_DYE),
-    MAGENTA(Material.MAGENTA_DYE),
-    LIGHT_BLUE(Material.LIGHT_BLUE_DYE),
-    YELLOW(Material.YELLOW_DYE),
-    LIME(Material.LIME_DYE),
     PINK(Material.PINK_DYE),
-    LIGHT_GRAY(Material.LIGHT_GRAY_DYE),
-    CYAN(Material.CYAN_DYE),
     PURPLE(Material.PURPLE_DYE),
-    BLUE(Material.BLUE_DYE),
-    BROWN(Material.BROWN_DYE),
+
+    ORANGE(Material.ORANGE_DYE),
+    YELLOW(Material.YELLOW_DYE),
     GREEN(Material.GREEN_DYE),
     BLACK(Material.BLACK_DYE),
+
+    CYAN(Material.CYAN_DYE),
+    LIGHT_GRAY(Material.LIGHT_GRAY_DYE),
+    LIME(Material.LIME_DYE),
+    BROWN(Material.BROWN_DYE),
+
+    MAGENTA(Material.MAGENTA_DYE),
+    LIGHT_BLUE(Material.LIGHT_BLUE_DYE),
+    BLUE(Material.BLUE_DYE),
+    WHITE(Material.WHITE_DYE),
+
     PAPER(Material.PAPER);
 
     private final Material dye;
@@ -32,25 +35,13 @@ public enum PresentIngredients implements Supplier<Material> {
     }
 
     /**
-     * Gets a result.
+     * Gets a dye or a paper material.
      *
-     * @return a result
+     * @return a present material
      */
     @Override
     public Material get() {
         return dye;
-    }
-
-    public static int indexOf(Material material) {
-        for (int i = 0; i < values().length; i++) {
-            Material dye = values()[i].get();
-            if (dye == material) return i;
-        }
-        return -1;
-    }
-
-    public static int indexOf(ItemStack item) {
-        return item == null ? -1 : indexOf(item.getType());
     }
 
 }
