@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -95,6 +96,7 @@ public enum PresentEvent implements Listener {
     }
 
     private void returnItemsToPlayer(InventoryCloseEvent event, Inventory inventory) {
+        if (Arrays.stream(inventory.getContents()).allMatch(Objects::isNull)) return;
         final HashMap<Integer, ItemStack> integerItemStackHashMap = event.getPlayer().getInventory().addItem(inventory.getContents());
         if (integerItemStackHashMap.isEmpty()) return;
         integerItemStackHashMap.forEach((index, item) -> event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), item));
