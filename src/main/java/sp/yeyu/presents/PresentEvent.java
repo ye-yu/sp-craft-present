@@ -33,6 +33,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
@@ -41,9 +43,27 @@ import java.util.Random;
 public enum PresentEvent implements Listener {
     INSTANCE;
 
-    private static final HashMap<HumanEntity, Inventory> OPEN_INVENTORIES = new HashMap<>();
+    private final HashMap<HumanEntity, Inventory> openInventories = new HashMap<>();
+    private final Random random = new Random(System.currentTimeMillis());
+    private final Method inventoryGetTitle;
 
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
+    PresentEvent() {
+        Method method = null;
+        try {
+            Class<Inventory> inventoryClass = Inventory.class;
+            method = inventoryClass.getMethod("getTitle");
+        } catch (NoSuchMethodException ignored) {
+        }
+        inventoryGetTitle = method;
+    }
+
+    private boolean inventoryIsTitledPresent(Inventory inventory) {
+        try {
+            return inventoryGetTitle == null || inventoryGetTitle.invoke(inventory).equals("Present");
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            return true;
+        }
+    }
 
     @EventHandler
     public void onBlockPlace(final BlockPlaceEvent event) {
@@ -91,25 +111,24 @@ public enum PresentEvent implements Listener {
         } catch (FileNotFoundException e) {
             Log.INSTANCE.errorWithDisable("Cannot get presents at main hand item with reasons: ", e);
         }
-        if (OPEN_INVENTORIES.getOrDefault(event.getPlayer(), null) != null) {
+        if (openInventories.getOrDefault(event.getPlayer(), null) != null) {
             Log.INSTANCE.warn("Player has already scheduled a different present inventory event exit handling.");
             Log.INSTANCE.warn("Overwriting inventory...");
         }
-        OPEN_INVENTORIES.put(event.getPlayer(), present);
+        openInventories.put(event.getPlayer(), present);
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPresentExit(InventoryCloseEvent event) {
         final Inventory inventory = event.getInventory();
-        if (inventory != OPEN_INVENTORIES.getOrDefault(event.getPlayer(), null) && !inventory.getTitle().equals("Present"))
+        if (inventory != openInventories.getOrDefault(event.getPlayer(), null) && !inventoryIsTitledPresent(inventory))
             return;
         final ItemStack itemInHand = event.getPlayer().getInventory().getItemInMainHand();
         if (Presents.isInvalidPresent(itemInHand)) {
             returnItemsToPlayer(event, inventory);
             return;
         }
-        OPEN_INVENTORIES.remove(event.getPlayer());
+        openInventories.remove(event.getPlayer());
         try {
             Data.INSTANCE.updatePresentsData(itemInHand, inventory.getContents());
         } catch (IOException e) {
@@ -126,6 +145,6 @@ public enum PresentEvent implements Listener {
     }
 
     private ItemStack getRandomPaper() {
-        return new ItemStack(Material.PAPER, 1 + RANDOM.nextInt(3));
+        return new ItemStack(Material.PAPER, 1 + random.nextInt(3));
     }
 }
