@@ -46,7 +46,7 @@ processResources {
 }
 
 task deletePlugin {
-    final String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
+    final String dir =String.format(Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir, spigotVersion)
     logger.info("Spigot server directory: $dir")
     final File[] plugins = Paths.get(dir).resolve("plugins").toFile().listFiles() ?: new File[0]
     logger.debug("Plugin list size: ${plugins.length}")

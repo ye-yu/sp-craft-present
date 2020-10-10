@@ -19,6 +19,7 @@ package sp.yeyu.presents;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -92,6 +93,7 @@ public enum Data {
         try(final FileWriter writer = new FileWriter(file)) {
             for (ItemStack content : contents) {
                 if (content == null) continue;
+                if (content.getType() == Material.AIR) continue;
                 final NBTEditor.NBTCompound nbtCompound = NBTEditor.getNBTCompound(content);
                 writer.write(nbtCompound.toJson());
                 writer.write("\n");
