@@ -22,10 +22,10 @@ public enum Log {
 
     private static final int LOOK_BACK = 2;
 
-    public void info(String message) {
+    public void info(String s) {
         final StackTraceElement[] currentStackTrace = Thread.currentThread().getStackTrace();
         final int lookBack = Math.min(Log.LOOK_BACK, currentStackTrace.length);
-        CraftPresents.getInstance().getLogger().info(trimClassName(currentStackTrace[lookBack].getClassName()) + ": " + message);
+        CraftPresents.getInstance().getLogger().info(trimClassName(currentStackTrace[lookBack].getClassName()) + ": " + s);
     }
 
     public String trimClassName(final String className) {
@@ -35,6 +35,7 @@ public enum Log {
 
     public void error(String s, Throwable e) {
         CraftPresents.getInstance().getLogger().severe(s);
+        CraftPresents.getInstance().getLogger().severe(e.getMessage());
         e.printStackTrace();
     }
 
@@ -42,4 +43,17 @@ public enum Log {
         error(s, e);
         ((CraftPresents)CraftPresents.getInstance()).disable();
     }
+
+    public void warn(String s) {
+        final StackTraceElement[] currentStackTrace = Thread.currentThread().getStackTrace();
+        final int lookBack = Math.min(Log.LOOK_BACK, currentStackTrace.length);
+        CraftPresents.getInstance().getLogger().warning(trimClassName(currentStackTrace[lookBack].getClassName()) + ": " + s);
+    }
+
+    public void warn(String s, Throwable e) {
+        CraftPresents.getInstance().getLogger().warning(s);
+        CraftPresents.getInstance().getLogger().warning(e.getMessage());
+        e.printStackTrace();
+    }
+
 }

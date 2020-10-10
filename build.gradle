@@ -1,6 +1,7 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'java'
+    id 'java-library'
 }
 
 group = pluginGroup
@@ -27,8 +28,8 @@ repositories {
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
-    implementation 'io.github.bananapuncher714:NBTEditor:7.16'
+    compileOnly group: 'org.spigotmc', name: 'spigot-api', version: '1.13.2-R0.1-SNAPSHOT'
+    implementation group: 'io.github.bananapuncher714', name: 'NBTEditor', version: '7.16'
     shadow group: 'io.github.bananapuncher714', name: 'NBTEditor', version: '7.16'
 }
 
@@ -45,18 +46,18 @@ processResources {
 }
 
 task deletePlugin {
-    String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
+    final String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
     logger.info("Spigot server directory: $dir")
-    def plugins = Paths.get(dir).resolve("plugins").toFile().listFiles() ?: new File[0]
+    final File[] plugins = Paths.get(dir).resolve("plugins").toFile().listFiles() ?: new File[0]
     logger.debug("Plugin list size: ${plugins.length}")
     iterateAndDelete plugins
 }
 
 task deployPlugin(type: Copy) {
-    String dir = Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir
-    String pluginDir = Paths.get(dir).resolve("plugins").toAbsolutePath().toString()
-    String artifactName = rootProject.name + "-" + version + "-all.jar"
-    def pluginPath = "$buildDir/libs/$artifactName"
+    final String dir = String.format(Os.isFamily(Os.FAMILY_WINDOWS) ? winServerDir : linServerDir, spigotVersion)
+    final String pluginDir = Paths.get(dir).resolve("plugins").toAbsolutePath().toString()
+    final String artifactName = rootProject.name + "-" + version + "-all.jar"
+    final String pluginPath = "$buildDir/libs/$artifactName"
     from pluginPath
     into pluginDir
     doLast {

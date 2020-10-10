@@ -23,32 +23,42 @@ import java.util.function.Supplier;
 
 public enum PresentIngredients implements Supplier<Material> {
 
-    RED(Material.RED_DYE),
-    GRAY(Material.GRAY_DYE),
-    PINK(Material.PINK_DYE),
-    PURPLE(Material.PURPLE_DYE),
+    BLACK("BLACK_DYE", "INK_SAC"),
+    BLUE("BLUE_DYE", "LAPIS_LAZULI"),
+    BROWN("BROWN_DYE", "COCOA_BEANS"),
+    CYAN("CYAN_DYE"),
 
-    ORANGE(Material.ORANGE_DYE),
-    YELLOW(Material.YELLOW_DYE),
-    GREEN(Material.GREEN_DYE),
-    BLACK(Material.BLACK_DYE),
+    GRAY("GRAY_DYE"),
+    GREEN("GREEN_DYE", "CACTUS_GREEN"),
+    LIGHT_BLUE("LIGHT_BLUE_DYE"),
+    LIGHT_GRAY("LIGHT_GRAY_DYE"),
 
-    CYAN(Material.CYAN_DYE),
-    LIGHT_GRAY(Material.LIGHT_GRAY_DYE),
-    LIME(Material.LIME_DYE),
-    BROWN(Material.BROWN_DYE),
+    LIME("LIME_DYE"),
+    MAGENTA("MAGENTA_DYE"),
+    ORANGE("ORANGE_DYE"),
+    PINK("PINK_DYE"),
 
-    MAGENTA(Material.MAGENTA_DYE),
-    LIGHT_BLUE(Material.LIGHT_BLUE_DYE),
-    BLUE(Material.BLUE_DYE),
-    WHITE(Material.WHITE_DYE),
-
-    PAPER(Material.PAPER);
+    PURPLE("PURPLE_DYE"),
+    RED("RED_DYE", "ROSE_RED"),
+    WHITE("WHITE_DYE", "BONE_MEAL"),
+    YELLOW("YELLOW_DYE", "DANDELION_YELLOW");
 
     private final Material dye;
 
-    PresentIngredients(Material dye) {
-        this.dye = dye;
+    PresentIngredients(String... names) {
+        Material candidateDye = null;
+        for (String name : names) {
+            boolean found = false;
+            try {
+                candidateDye = getMaterial(name);
+                found = true;
+            } catch (IllegalArgumentException ignored) {
+            }
+            if (found) break;
+        }
+        dye = candidateDye;
+        if (candidateDye == null)
+            Log.INSTANCE.errorWithDisable("Error: ", new NoSuchFieldException("Cannot find material for " + name()));
     }
 
     /**
@@ -59,6 +69,10 @@ public enum PresentIngredients implements Supplier<Material> {
     @Override
     public Material get() {
         return dye;
+    }
+
+    public Material getMaterial(String enumName) {
+        return Material.valueOf(enumName);
     }
 
 }
