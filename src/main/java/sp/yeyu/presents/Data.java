@@ -24,7 +24,10 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
 import java.util.*;
@@ -45,9 +48,10 @@ public enum Data {
     public void recordPresent(Block block, ItemStack itemInHand) throws IOException {
         final String filename = toFileName(block.getLocation());
         final File file = new File(directory, filename);
-        if (file.exists() && !file.delete()) throw new FileSystemException("File exists and cannot be deleted: " + file);
+        if (file.exists() && !file.delete())
+            throw new FileSystemException("File exists and cannot be deleted: " + file);
         file.createNewFile();
-        try(final FileWriter writer = new FileWriter(file)) {
+        try (final FileWriter writer = new FileWriter(file)) {
             writer.write(Objects.requireNonNull(Objects.requireNonNull(itemInHand.getItemMeta()).getLore()).get(1));
         }
     }
@@ -64,7 +68,7 @@ public enum Data {
         final String filename = toFileName(location);
         final File file = new File(directory, filename);
         if (!file.exists()) throw new FileSystemException("Cannot find data for present at: " + filename);
-        try(final Scanner reader = new Scanner(file)) {
+        try (final Scanner reader = new Scanner(file)) {
             return getItemsFromName(reader.nextLine());
         }
     }
@@ -72,8 +76,8 @@ public enum Data {
     public ArrayList<ItemStack> getItemsFromName(String filename) throws FileNotFoundException {
         final ArrayList<ItemStack> list = new ArrayList<>();
         if (filename.equals("Empty")) return list;
-        try(final Scanner scanner = new Scanner(new File(directory, filename))) {
-            while(scanner.hasNextLine()) {
+        try (final Scanner scanner = new Scanner(new File(directory, filename))) {
+            while (scanner.hasNextLine()) {
                 list.add(NBTEditor.getItemFromTag(NBTEditor.NBTCompound.fromJson(scanner.nextLine())));
             }
         }
@@ -90,7 +94,7 @@ public enum Data {
             return;
         }
 
-        try(final FileWriter writer = new FileWriter(file)) {
+        try (final FileWriter writer = new FileWriter(file)) {
             for (ItemStack content : contents) {
                 if (content == null) continue;
                 if (content.getType() == Material.AIR) continue;
@@ -111,6 +115,7 @@ public enum Data {
     public void removeLoot(Location location) throws FileSystemException {
         final String filename = toFileName(location);
         final File file = new File(directory, filename);
-        if (file.exists() && !file.delete()) throw new FileSystemException("Cannot remove loot data for present at: " + filename);
+        if (file.exists() && !file.delete())
+            throw new FileSystemException("Cannot remove loot data for present at: " + filename);
     }
 }

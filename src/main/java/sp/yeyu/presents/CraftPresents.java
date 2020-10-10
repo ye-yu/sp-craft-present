@@ -27,9 +27,10 @@ import java.util.Objects;
 public class CraftPresents extends JavaPlugin {
 
     private static JavaPlugin instance = null;
+
     public CraftPresents() {
         super();
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
     }
 
     public static JavaPlugin getInstance() {

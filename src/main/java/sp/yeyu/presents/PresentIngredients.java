@@ -19,6 +19,8 @@ package sp.yeyu.presents;
 
 import org.bukkit.Material;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public enum PresentIngredients implements Supplier<Material> {
@@ -46,19 +48,22 @@ public enum PresentIngredients implements Supplier<Material> {
     private final Material dye;
 
     PresentIngredients(String... names) {
-        Material candidateDye = null;
-        for (String name : names) {
-            boolean found = false;
-            try {
-                candidateDye = getMaterial(name);
-                found = true;
-            } catch (IllegalArgumentException ignored) {
-            }
-            if (found) break;
+        Material candidateDye;
+        try {
+            candidateDye = Arrays.stream(names).map(PresentIngredients::getMaterial).filter(Objects::nonNull).findAny().orElseThrow(() -> new NoSuchFieldException("Cannot find material for " + name()));
+        } catch (NoSuchFieldException e) {
+            Log.INSTANCE.errorWithDisable("Error: ", e);
+            candidateDye = null;
         }
         dye = candidateDye;
-        if (candidateDye == null)
-            Log.INSTANCE.errorWithDisable("Error: ", new NoSuchFieldException("Cannot find material for " + name()));
+    }
+
+    public static Material getMaterial(String enumName) {
+        try {
+            return Material.valueOf(enumName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**
@@ -70,9 +75,4 @@ public enum PresentIngredients implements Supplier<Material> {
     public Material get() {
         return dye;
     }
-
-    public Material getMaterial(String enumName) {
-        return Material.valueOf(enumName);
-    }
-
 }

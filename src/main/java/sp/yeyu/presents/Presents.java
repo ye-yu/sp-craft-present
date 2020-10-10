@@ -55,7 +55,6 @@ public enum Presents implements Supplier<ItemStack> {
     WHITE_BOX("http://textures.minecraft.net/texture/10f5398510b1a05afc5b201ead8bfc583e57d7202f5193b0b761fcbd0ae2", PresentIngredients.WHITE.get()),
     YELLOW_BOX("http://textures.minecraft.net/texture/a3e58ea7f3113caecd2b3a6f27af53b9cc9cfed7b043ba334b5168f1391d9", PresentIngredients.YELLOW.get());
 
-
     private static final Random random = new Random(System.currentTimeMillis());
     private final Material dyeColor;
     private final String texture;
@@ -74,6 +73,20 @@ public enum Presents implements Supplier<ItemStack> {
         return item.getItemMeta() == null || !item.getItemMeta().hasLore() || !item.getItemMeta().getLore().contains("Present Tag");
     }
 
+    public static int length() {
+        return values().length;
+    }
+
+    public static Presents random() {
+        return values()[random.nextInt(Presents.length())];
+    }
+
+    public static void craftPresent(JavaPlugin plugin) {
+        for (Presents value : values()) {
+            value.craft(plugin);
+        }
+    }
+
     public ItemStack get() {
         final ItemStack head = NBTEditor.getHead(texture);
         head.setItemMeta(renamePresent(Objects.requireNonNull(head.getItemMeta())));
@@ -86,14 +99,6 @@ public enum Presents implements Supplier<ItemStack> {
         return itemMeta;
     }
 
-    public static int length() {
-        return values().length;
-    }
-
-    public static Presents random() {
-        return values()[random.nextInt(Presents.length())];
-    }
-
     protected void craft(JavaPlugin plugin) {
         final NamespacedKey key = new NamespacedKey(plugin, namespaceName);
         final ShapedRecipe recipe = new ShapedRecipe(key, get());
@@ -102,11 +107,5 @@ public enum Presents implements Supplier<ItemStack> {
         recipe.setIngredient('D', dyeColor);
         Bukkit.addRecipe(recipe);
         Preconditions.checkState(!Bukkit.getRecipesFor(get()).isEmpty(), "Cannot validate recipe for " + displayName);
-    }
-
-    public static void craftPresent(JavaPlugin plugin) {
-        for (Presents value : values()) {
-            value.craft(plugin);
-        }
     }
 }

@@ -41,7 +41,7 @@ public enum Log {
 
     public void errorWithDisable(String s, Throwable e) {
         error(s, e);
-        ((CraftPresents)CraftPresents.getInstance()).disable();
+        ((CraftPresents) CraftPresents.getInstance()).disable();
     }
 
     public void warn(String s) {
